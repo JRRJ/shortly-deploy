@@ -10,18 +10,26 @@ var userSchema = mongoose.Schema({
 });
 
 userSchema.methods.comparePassword = function(attemptedPassword, callback) {
-  bcrypt.compare(attemptedPassword, this.get('password'), function(err, isMatch) {
+  console.log('attemptedPassword, this.password', attemptedPassword, this.password);
+  bcrypt.compare(attemptedPassword, this.password, function(err, isMatch) {
+    console.log('isMatch', isMatch);
     callback(isMatch);
   });
 };
 
 userSchema.methods.hashPassword = function() {
   var cipher = Promise.promisify(bcrypt.hash);
-  return cipher(this.get('password'), null, null).bind(this)
+  return cipher(this.password, null, null).bind(this)
     .then(function(hash) {
-      this.set('password', hash);
+      console.log('hashing password! it is now', hash);
+      this.password = hash;
     });
 };
+
+
+userSchema.post('init', function(model) {
+  model.hashPassword();
+});
 
 var User = mongoose.model('User', userSchema);
 

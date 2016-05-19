@@ -112,6 +112,8 @@ describe('', function() {
           .expect(200)
           .expect(function(res) {
             var secondCode = res.body.code;
+            console.log('res.body', res.body);
+            console.log('first and second codes:', firstCode, secondCode);
             expect(secondCode).to.equal(firstCode);
           })
           .end(done);
