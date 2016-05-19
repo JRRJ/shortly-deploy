@@ -109,9 +109,13 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('deploy', [ 'concat', 'uglify', 'cssmin', 'eslint', 'mochaTest', 'nodemon'
-    // add your deploy tasks here
-  ]);
+  grunt.registerTask('deploy', function(n) {
+    grunt.task.run([ 'concat', 'uglify', 'cssmin', 'eslint', 'mochaTest']);
+    if (grunt.option('prod')) {
+      grunt.task.run(['shell:prodServer']);
+    }
+    grunt.task.run(['nodemon']);
+  });
 
 
 };
