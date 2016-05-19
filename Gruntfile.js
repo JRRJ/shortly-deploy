@@ -36,6 +36,7 @@ module.exports = function(grunt) {
     eslint: {
       target: [
         // Add list of files to lint here
+        'public/**/*.js', 'views/**/*.js', 'app/**/*.js', 'lib/**/*.js'
       ]
     },
 
@@ -54,8 +55,10 @@ module.exports = function(grunt) {
           'public/lib/**/*.js',
         ],
         tasks: [
+          'eslint',
+          'mochaTest',
           'concat',
-          'uglify'
+          'uglify',
         ]
       },
       css: {
@@ -66,6 +69,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push live master'
       }
     },
   });
@@ -91,7 +95,7 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', [ 'server-dev'
+  grunt.registerTask('build', [ 'eslint', 'mochaTest'
   ]);
 
   grunt.registerTask('default', [ 'build'
@@ -105,7 +109,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('deploy', [ 'concat', 'uglify', 'cssmin', 'eslint', 'mochaTest', 'nodemon'
     // add your deploy tasks here
   ]);
 
